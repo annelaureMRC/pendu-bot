@@ -20,3 +20,10 @@ npm install
 ```
 node index.js
 ```
+
+# Inviter le bot
+Pour inviter le bot, copiez collez l'URL suivante et remplacez [INSEREZ_ID] par l'ID de votre application.
+
+```
+https://discordapp.com/oauth2/authorize?client_id=[INSEREZ_ID]&scope=bot&permissions=388176
+```
