@@ -27,3 +27,7 @@ Pour inviter le bot, copiez collez l'URL suivante et remplacez [INSEREZ_ID] par 
 ```
 https://discordapp.com/oauth2/authorize?client_id=[INSEREZ_ID]&scope=bot&permissions=388176
 ```
+
+# Tester le bot
+Pour tester le bot, vous pouvez rejoindre mon serveur Discord!  
+**-> https://discord.gg/YuRMkZW <-**
