@@ -303,6 +303,6 @@ client.on("message", message => {
 
     if (isCommand("help", message)) {
       message.delete()
-      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start [mot]` : Démare une partie avec le mot [mot] ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre]` : Essaye de trouver la lettre [lettre]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message")
+      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start [mot]` : Démare une partie avec le mot [mot] ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message")
     }
 });
