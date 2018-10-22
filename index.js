@@ -5,7 +5,7 @@ const mots = require("./mots.json")
 const config = require("./config.json")
 
 var date = new Date().toLocaleTimeString();
-var version = "0.2.0";
+var version = "0.3.0";
 
 var motATrouver = "";
 var motTrouve = "";
@@ -213,7 +213,7 @@ client.on("message", message => {
         erreur = 0;
 
         addLog("Démarage d'une partie par " + message.author.username + " | Mot a trouver : " + motATrouver, false);
-        message.channel.send("Nouvelle partie! Utilisez `p!try` pour proposer des lettres!")
+        message.channel.send("Nouvelle partie! Utilisez `" + config.prefix + "try` pour proposer des lettres!")
         message.channel.send(affPendu(erreur))
         message.channel.send("> " + motTrouve + " <")
       } else {
@@ -246,12 +246,12 @@ client.on("message", message => {
             if (inGame === false) {
               if (win === true) {
                 message.channel.send(affPendu(erreur))
-                message.channel.send("Vous avez trouvé le mot " + motATrouver + " avec " + erreur + " erreurs!")
-                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `p!start` (mot) pour lancer!"})
+                message.channel.send("Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs!")
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start` (mot) pour lancer!"})
               } else {
                 message.channel.send(affPendu(6))
-                message.channel.send("Vous avez perdu! Le mot a trouver était " + motATrouver)
-                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `p!start` (mot) pour lancer!"})
+                message.channel.send("Vous avez perdu! Le mot a trouver était `" + motATrouver + "`")
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start` (mot) pour lancer!"})
               }
               addLog("Partie terminée par " + message.author.username, false)
             } else {
@@ -259,13 +259,34 @@ client.on("message", message => {
               message.channel.send("> " + motTrouve + " <")
             }
           } else {
-            message.reply("Tu dois entrer une lettre après `p!try` !")
+            if (args[1].toUpperCase() === motATrouver) {
+              message.channel.send(affPendu(erreur))
+              message.channel.send("Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs!")
+              message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (mot)` pour lancer!"})
+              addLog("Partie terminée par " + message.author.username, false)
+              win = false;
+              inGame = false;
+            } else {
+              erreur = erreur + 1;
+
+              if (erreur === 7) {
+                var win = false;
+                inGame = false;
+                message.channel.send(affPendu(6))
+                message.channel.send("Vous avez perdu! Le mot a trouver était `" + motATrouver + "`")
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (mot)` pour lancer!"})
+                addLog("Partie terminée par " + message.author.username, false)
+              } else {
+                message.channel.send(affPendu(erreur))
+                message.channel.send("> " + motTrouve + " <")
+              }
+            }
           }
         } else {
-          message.reply("Tu dois entrer une lettre après `p!try` !")
+          message.channel.send("Vous devez spécifier un argument après `" + config.prefix + "try (lettre/mot)`!")
         }
       } else {
-        message.reply("La partie n'est pas encore lancée! Utilisez `p!start (mot)`");
+        message.reply("La partie n'est pas encore lancée! Utilisez `" + config.prefix + "start (mot)`");
       }
     }
 
