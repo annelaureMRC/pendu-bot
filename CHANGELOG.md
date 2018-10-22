@@ -1,6 +1,5 @@
 # A faire
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
-- Ajout de commandes pour deviner un mot en entier
 - Mise en place d'une base de donnée MySQL
 
 # 0.3.0
