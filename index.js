@@ -5,18 +5,20 @@ const mots = require("./mots.json")
 const config = require("./config.json")
 
 var date = new Date().toLocaleTimeString();
-var version = "0.3.0";
+var version = "0.4.0";
 
 var motATrouver = "";
 var motTrouve = "";
 var inGame = false;
 var erreur = 0;
+var nbEssais = 0;
+var difficultee = "";
 
 client.login(config.token);
 
 client.on("ready", async () => {
   addLog("Connection du bot à Discord.", true)
-  client.user.setGame("p!help");
+  client.user.setGame(config.prefix + "help");
 });
 
 function addLog(pMessage, pRetour) {
@@ -38,13 +40,14 @@ function addLog(pMessage, pRetour) {
   }
 }
 
-function genChaineCherche(pChaine) {
+function genChaineCherche(pChaine, pMode) {
   /*
   genChaineCherche : fonction : str :
       Retourne la chaine contenant les - et la premiere/derniere lettre (au choix)
 
   Peremetre:
     pChaine : str : la chaine d'entree
+    pMode : str : le mode de difficultee (NORMAL HARD)
 
   Retour:
     chaineSortie : str : chaine renvoyee, contenant des _
@@ -52,9 +55,18 @@ function genChaineCherche(pChaine) {
 
   var chaineSortie = "";
 
-  chaineSortie = chaineSortie + pChaine.charAt(0);
-  for (var i = 0; i < pChaine.length-1; i++) {
-    chaineSortie = chaineSortie + "-";
+  if (pMode === "NORMAL") {
+    chaineSortie = chaineSortie + pChaine.charAt(0);
+    for (var i = 0; i < pChaine.length-2; i++) {
+      chaineSortie = chaineSortie + "-";
+    }
+    chaineSortie = chaineSortie + pChaine.charAt(pChaine.length-1);
+    difficultee = "NORMAL";
+  } else {
+    for (var i = 0; i < pChaine.length; i++) {
+      chaineSortie = chaineSortie + "-";
+    }
+    difficultee = "HARD"
   }
 
   return chaineSortie;
@@ -201,21 +213,30 @@ client.on("message", message => {
     if (isCommand("start", message)) {
       if (inGame === false) {
         message.delete()
-        message.channel.edit({"name": "❌pendu", "topic" : "Partie en cours. Lancé par " + message.author.username})
-        if (args[1] != null) {
-          motATrouver = args[1].toUpperCase();
+        message.channel.edit({"name": "❌pendu", "topic" : "Partie en cours. Lancée par " + message.author.username})
+        if (args[2] != null) {
+          motATrouver = args[2].toUpperCase();
         } else {
           motATrouver = choixMotRandom();
         }
 
-        motTrouve = genChaineCherche(motATrouver);
+        if (args[1] == null) {
+          motTrouve = genChaineCherche(motATrouver, "NORMAL");
+        } else if (args[1].toUpperCase()!="NORMAL" && args[1].toUpperCase()!= "HARD") {
+          motTrouve = genChaineCherche(motATrouver, "NORMAL");
+        } else {
+          motTrouve = genChaineCherche(motATrouver, args[1].toUpperCase());
+        }
         inGame = true;
         erreur = 0;
 
-        addLog("Démarage d'une partie par " + message.author.username + " | Mot a trouver : " + motATrouver, false);
-        message.channel.send("Nouvelle partie! Utilisez `" + config.prefix + "try` pour proposer des lettres!")
-        message.channel.send(affPendu(erreur))
-        message.channel.send("> " + motTrouve + " <")
+        addLog("Démarage d'une partie par " + message.author.username + " | Mot a trouver : " + motATrouver + " | Difficultée : " + difficultee, false);
+        const embed = {
+          "title": "Nouvelle partie (" + difficultee + ")",
+          "description": "Utilisez `" + config.prefix + "try` pour proposer des lettres ou des mots!\n\n**> " + motTrouve + " <**",
+          "color": 2719929
+        };
+        message.channel.send({ embed });
       } else {
         message.reply("La partie est déjà en cours!");
       }
@@ -224,6 +245,7 @@ client.on("message", message => {
     if (isCommand("try", message)) {
       if (inGame === true) {
         if (args[1] != null) {
+          nbEssais = nbEssais + 1;
           if (args[1].length === 1) {
             if (occurence(motATrouver, args[1].toUpperCase()) === false) {
               erreur = erreur + 1;
@@ -245,24 +267,52 @@ client.on("message", message => {
 
             if (inGame === false) {
               if (win === true) {
-                message.channel.send(affPendu(erreur))
-                message.channel.send("Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs!")
-                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start` (mot) pour lancer!"})
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (difficultee) (mot)` pour lancer!"})
+                const embed = {
+                  "title": "Victoire!",
+                  "description": affPendu(erreur) + "Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs et **" + nbEssais + "** essais!",
+                  "color": 5025616
+                };
+                message.channel.send({ embed });
               } else {
-                message.channel.send(affPendu(6))
-                message.channel.send("Vous avez perdu! Le mot a trouver était `" + motATrouver + "`")
-                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start` (mot) pour lancer!"})
+                const embed = {
+                  "title": "Défaite!",
+                  "description": affPendu(6) + "Vous avez perdu! Le mot a trouver était `" + motATrouver + "`",
+                  "color": 15158332
+                };
+                message.channel.send({ embed });
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (difficultee) (mot)` pour lancer!"})
               }
               addLog("Partie terminée par " + message.author.username, false)
             } else {
-              message.channel.send(affPendu(erreur))
-              message.channel.send("> " + motTrouve + " <")
+              const embed = {
+                "title": "> " + motTrouve + " <",
+                "description": affPendu(erreur),
+                "color": 2719929,
+                "fields": [
+                  {
+                    "name": "Erreurs",
+                    "value": erreur + "/6",
+                    "inline": true
+                  },
+                  {
+                    "name": "Essais",
+                    "value": nbEssais,
+                    "inline": true
+                  }
+                ]
+              };
+              message.channel.send({ embed });
             }
           } else {
             if (args[1].toUpperCase() === motATrouver) {
-              message.channel.send(affPendu(erreur))
-              message.channel.send("Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs!")
-              message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (mot)` pour lancer!"})
+              const embed = {
+                "title": "Victoire!",
+                "description": affPendu(erreur) + "Vous avez trouvé le mot `" + motATrouver + "` avec **" + erreur + "** erreurs et **" + nbEssais + "** essais!!",
+                "color": 5025616
+              };
+              message.channel.send({ embed });
+              message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (difficultee) (mot)` pour lancer!"})
               addLog("Partie terminée par " + message.author.username, false)
               win = false;
               inGame = false;
@@ -272,13 +322,33 @@ client.on("message", message => {
               if (erreur === 7) {
                 var win = false;
                 inGame = false;
-                message.channel.send(affPendu(6))
-                message.channel.send("Vous avez perdu! Le mot a trouver était `" + motATrouver + "`")
-                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (mot)` pour lancer!"})
+                const embed = {
+                  "title": "Défaite!",
+                  "description": affPendu(6) + "Vous avez perdu! Le mot a trouver était `" + motATrouver + "`",
+                  "color": 15158332
+                };
+                message.channel.send({ embed });
+                message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez `" + config.prefix + "start (difficultee) (mot)` pour lancer!"})
                 addLog("Partie terminée par " + message.author.username, false)
               } else {
-                message.channel.send(affPendu(erreur))
-                message.channel.send("> " + motTrouve + " <")
+                const embed = {
+                  "title": "> " + motTrouve + " <",
+                  "description": affPendu(erreur),
+                  "color": 2719929,
+                  "fields": [
+                    {
+                      "name": "Erreurs",
+                      "value": erreur + "/6",
+                      "inline": true
+                    },
+                    {
+                      "name": "Essais",
+                      "value": nbEssais,
+                      "inline": true
+                    }
+                  ]
+                };
+                message.channel.send({ embed });
               }
             }
           }
@@ -286,7 +356,7 @@ client.on("message", message => {
           message.channel.send("Vous devez spécifier un argument après `" + config.prefix + "try (lettre/mot)`!")
         }
       } else {
-        message.reply("La partie n'est pas encore lancée! Utilisez `" + config.prefix + "start (mot)`");
+        message.reply("La partie n'est pas encore lancée! Utilisez `" + config.prefix + "start (difficultee) (mot)`");
       }
     }
 
@@ -295,7 +365,7 @@ client.on("message", message => {
       if (message.member.hasPermission('ADMINISTRATOR')) {
         inGame = false;
         win = false;
-        message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez p!start (mot) pour lancer!"})
+        message.channel.edit({"name": "✔️pendu", "topic" : "Channel disponible! Utilisiez " + config.prefix + "start (difficultee) (mot) pour lancer!"})
         message.reply("La partie a bien été annulée.")
         addLog("Arrêt de la partie par un Administrateur", false)
       }
@@ -303,6 +373,6 @@ client.on("message", message => {
 
     if (isCommand("help", message)) {
       message.delete()
-      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start [mot]` : Démare une partie avec le mot [mot] ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message")
+      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start (difficultee) (mot)` : Démare une partie avec le mot (mot) ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message")
     }
 });
