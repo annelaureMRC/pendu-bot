@@ -3,6 +3,7 @@
 - Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
 - Liste des lettres et mots déjà essayés
+- Ajout numero de version dans le log
 
 # 0.4.0
 *(23/10/2018) 14H30*
