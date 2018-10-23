@@ -1,5 +1,9 @@
 # A faire
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
+- Utilisation d'embeb
+- Ajout mode normal/mode difficile (Normal première et dernière lettre/Hard juste -)
+- Ajout du nombre d'erreurs restantes et le nombre d'essais à la fin
+- Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
 
 # 0.3.0
