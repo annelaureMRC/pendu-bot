@@ -2,9 +2,21 @@
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
 - Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
-- Mdifier commande de lancement pour rediriger les erreurs dans un fichier
-- Correction commande ping
-- Correction ajout des lettres déja testés : reset la variable
+- Modifier commande de lancement pour rediriger les erreurs dans un fichier
+- Ajout d'une commande dans `p!valWord` pour suprimer un mot
+
+# 0.6.0
+*(25/10/2018) 19H00*
+
+## Fonctionnalitées
+- Ajout de la commande `p!word` pour proposer un mot
+- Ajout de la commande `p!valWord [all/modify/valide]` pour valalider ou non les mots
+- Modification du help en conséquence
+- Modification du nom du fichier
+
+## Correction
+- Commande ping : utilisation de `client.ping`
+- Ajout des lettres déja testés : reset la variable
 
 # 0.5.0
 *(25/10/2018) 12H50*
