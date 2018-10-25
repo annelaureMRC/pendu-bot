@@ -5,7 +5,7 @@ const mots = require("./mots.json")
 const config = require("./config.json")
 
 var date = new Date().toLocaleTimeString();
-var version = "0.4.0";
+var version = "0.5.0";
 
 var motATrouver = "";
 var motTrouve = "";
@@ -13,11 +13,12 @@ var inGame = false;
 var erreur = 0;
 var nbEssais = 0;
 var difficultee = "";
+var lettreTest = "";
 
 client.login(config.token);
 
 client.on("ready", async () => {
-  addLog("Connection du bot à Discord.", true)
+  addLog("Connection du bot à Discord. (" + version + ")", true)
   client.user.setGame(config.prefix + "help");
 });
 
@@ -200,6 +201,28 @@ function isCommand(pCommande, pMessage) {
   return pMessage.content.startsWith(config.prefix+ pCommande)
 }
 
+function testLettre(pListe, pLettre) {
+  /*
+  testLettre : fonction : str :
+    Envoit la liste des lettres deja essayes
+
+  Parametres:
+    pListe : str : la liste de lettres deja trouvees
+    pLettre : str : la lettre a ajouter
+
+  Local:
+    chaineSortie : str : la chaine de sortie
+  */
+
+  if (occurence(pListe, pLettre)) {
+    var chaineSortie = pListe;
+  } else {
+    var chaineSortie = pListe + pLettre;
+  }
+
+  return chaineSortie;
+}
+
 client.on("message", message => {
     if(message.author.bot) return;
     if(message.channel.type === "dm") return;
@@ -247,6 +270,7 @@ client.on("message", message => {
         if (args[1] != null) {
           nbEssais = nbEssais + 1;
           if (args[1].length === 1) {
+            lettreTest = testLettre(lettreTest, args[1].toUpperCase())
             if (occurence(motATrouver, args[1].toUpperCase()) === false) {
               erreur = erreur + 1;
 
@@ -299,6 +323,11 @@ client.on("message", message => {
                     "name": "Essais",
                     "value": nbEssais,
                     "inline": true
+                  },
+                  {
+                    "name": "Lettres",
+                    "value": lettreTest,
+                    "inline": true
                   }
                 ]
               };
@@ -345,6 +374,11 @@ client.on("message", message => {
                       "name": "Essais",
                       "value": nbEssais,
                       "inline": true
+                    },
+                    {
+                      "name": "Lettres",
+                      "value": lettreTest,
+                      "inline": true
                     }
                   ]
                 };
@@ -374,5 +408,10 @@ client.on("message", message => {
     if (isCommand("help", message)) {
       message.delete()
       message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start (difficultee) (mot)` : Démare une partie avec le mot (mot) ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message")
+    }
+
+    if (isCommand("ping", message)) {
+      message.delete()
+      message.reply("Mon ping est de" + `**${Date.now() - message.createdTimestamp}**` + " **ms** 🏓");
     }
 });
