@@ -6,8 +6,12 @@
 - Ajout d'une commande dans `p!valWord` pour suprimer un mot
 - Modifier information donnée par `p!valWord all`
 
-# 0.6.0
-*(25/10/2018) 19H00*
+# 0.6.1
+*(25/10/2018) 20H50*
+- Correction d'une faille de sécuritée
+- Possibilité de Ping, Help et word en MP
+- Ajout de la commande `p!shutdown` pour l'administrateur
+- Ajout d'un log de fermeture du bot
 
 ## Fonctionnalitées
 - Ajout de la commande `p!word` pour proposer un mot
