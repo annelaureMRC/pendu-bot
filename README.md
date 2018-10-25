@@ -18,7 +18,7 @@ npm install
 7. Vous pouvez modifier les autres paramètres si vous le souhaitez
 8. Lancez le bot avec
 ```
-node index.js
+node pendu.js
 ```
 
 # Inviter le bot
