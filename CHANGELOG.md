@@ -1,6 +1,5 @@
 # A faire
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
-- Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
 - Modifier commande de lancement pour rediriger les erreurs dans un fichier
 - Ajout d'une commande dans `p!valWord` pour suprimer un mot
