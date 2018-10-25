@@ -7,7 +7,7 @@
 - Correction ajout des lettres déja testés : reset la variable
 
 # 0.5.0
-*(25/10/2018) 12H50)*
+*(25/10/2018) 12H50*
 - Ajout de la commande de ping
 - Ajout numero de version dans le log
 - Liste des lettres et mots déjà essayés
