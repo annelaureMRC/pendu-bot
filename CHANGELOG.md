@@ -2,10 +2,13 @@
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
 - Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
-- Liste des lettres et mots déjà essayés
-- Ajout numero de version dans le log
-- Ajout de la commande de ping
 - Mdifier commande de lancement pour rediriger les erreurs dans un fichier
+
+# 0.5.0
+*(25/10/2018) 12H50)*
+- Ajout de la commande de ping
+- Ajout numero de version dans le log
+- Liste des lettres et mots déjà essayés
 
 # 0.4.0
 *(23/10/2018) 14H30*
