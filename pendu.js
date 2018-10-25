@@ -515,7 +515,7 @@ client.on("message", message => {
 
 process.on('SIGTERM', () => {
   addLog("Extinction du bot par la console", false)
-  message.reply("Extiction du bot dans 5 secondes.")
+  console.log("Extiction du bot dans 5 secondes.")
 
   setTimeout(function(){
     process.exit();
