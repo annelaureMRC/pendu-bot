@@ -1,18 +1,28 @@
 {
-  "liste_mot" : [
-    "CAROTTE",
-    "PATATE",
-    "FROMAGE",
-    "ROBLOCHON",
-    "ORDINATEUR",
-    "GUITARE",
-    "CLARINETTE",
-    "SAXOPHONE",
-    "LINUX",
-    "UNIX",
-    "WINDOWS",
-    "APPLE",
-    "PYTHON",
-    "POTIRON"
-  ]
+    "liste_mot": [
+        "CAROTTE",
+        "PATATE",
+        "FROMAGE",
+        "ROBLOCHON",
+        "ORDINATEUR",
+        "GUITARE",
+        "CLARINETTE",
+        "SAXOPHONE",
+        "LINUX",
+        "UNIX",
+        "WINDOWS",
+        "APPLE",
+        "PYTHON",
+        "POTIRON",
+        "PENDU",
+        "CUCURBITACEES",
+        "COUSCOUS",
+        "COURGETTE",
+        "PATATE",
+        "VERRE",
+        "LETTRE",
+        "ECONOMIE",
+        "ALGORITHMIQUE",
+        "MICRO"
+    ]
 }

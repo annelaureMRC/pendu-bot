@@ -1,8 +1,8 @@
 {
   "name": "pendu-discord",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Un bot Discord pour jouer au pendu",
-  "main": "index.js",
+  "main": "pendu.js",
   "author": "Bigaston",
   "repository": {
   	"type": "git",
