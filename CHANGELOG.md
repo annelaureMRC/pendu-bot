@@ -5,6 +5,7 @@
 - Modifier commande de lancement pour rediriger les erreurs dans un fichier
 - Ajout d'une commande dans `p!valWord` pour suprimer un mot
 - Modifier information donnée par `p!valWord all`
+- Arrondir le ping
 
 # 0.6.1
 *(25/10/2018) 20H50*
