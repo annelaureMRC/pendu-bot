@@ -4,6 +4,7 @@
 - Mise en place d'une base de donnée MySQL
 - Mdifier commande de lancement pour rediriger les erreurs dans un fichier
 - Correction commande ping
+- Correction ajout des lettres déja testés : reset la variable
 
 # 0.5.0
 *(25/10/2018) 12H50)*
