@@ -4,6 +4,7 @@
 - Mise en place d'une base de donnée MySQL
 - Modifier commande de lancement pour rediriger les erreurs dans un fichier
 - Ajout d'une commande dans `p!valWord` pour suprimer un mot
+- Modifier information donnée par `p!valWord all`
 
 # 0.6.0
 *(25/10/2018) 19H00*
