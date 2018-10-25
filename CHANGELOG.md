@@ -11,6 +11,7 @@
 ## Fonctionnalitées
 - Ajout de la commande `p!word` pour proposer un mot
 - Ajout de la commande `p!valWord [all/modify/valide]` pour valalider ou non les mots
+- Ajout du fichier `motEnAttente.json` contenant les mots en attente de validation
 - Modification du help en conséquence
 - Modification du nom du fichier
 
