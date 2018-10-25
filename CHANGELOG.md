@@ -3,6 +3,7 @@
 - Ajout d'une commande pour proposer des mots
 - Mise en place d'une base de donnée MySQL
 - Mdifier commande de lancement pour rediriger les erreurs dans un fichier
+- Correction commande ping
 
 # 0.5.0
 *(25/10/2018) 12H50)*
