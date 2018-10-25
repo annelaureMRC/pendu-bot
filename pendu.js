@@ -6,7 +6,7 @@ const motsEnAttente = require("./motsEnAttente.json")
 const config = require("./config.json")
 
 var date = new Date().toLocaleTimeString();
-var version = "0.6.0";
+var version = "0.6.1";
 
 var motATrouver = "";
 var motTrouve = "";
@@ -36,7 +36,7 @@ function addLog(pMessage, pRetour) {
   var date = new Date().toLocaleTimeString();
 
   if (pRetour === false) {
-    fs.appendFile(config.log, "\n[" + date + "] " + pMessage, function (err) {});
+    fs.appendFile(config.log, "\n[" + date + "] " + pMessage, function (err) {})
   } else {
     fs.appendFile(config.log, "\n\n[" + date + "] " + pMessage, function (err) {});
   }
@@ -237,13 +237,65 @@ function removeParam(pTable, pIndex) {
 
 client.on("message", message => {
     if(message.author.bot) return;
-    //if(message.channel.type === "dm") return;
     if(message.content.startsWith(config.prefix)===true) {
       args = message.content.split(/[ ]+/)
     } else {
       return;
     }
-    //if(message.channel.id!=config.channel) return;
+
+    if (isCommand("shutdown", message)) {
+      if (message.author.id === config.botadmin) {
+        addLog("Extinction du bot par " + message.author.username, false)
+        message.reply("Extiction du bot dans 5 secondes.")
+
+        setTimeout(function(){
+            process.exit();
+        }, 5000);
+      }
+    }
+
+    if (isCommand("word", message)) {
+      message.delete()
+      if (args[1].length>=3) {
+        var inside = false;
+        for (var i = 0; i < mots.liste_mot.length; i++) {
+          if (mots.liste_mot[i]==args[1].toUpperCase()) {
+            inside = true;
+          }
+        }
+
+        for (var i = 0; i < motsEnAttente.liste_mot.length; i++) {
+          if (motsEnAttente.liste_mot[i].mot==args[1].toUpperCase()) {
+            inside = true;
+          }
+        }
+
+        if (inside == false) {
+          motsEnAttente.liste_mot[motsEnAttente.liste_mot.length] = {"mot": args[1].toUpperCase(), "user": message.author.username}
+          fs.writeFile("motsEnAttente.json", JSON.stringify (motsEnAttente, null, 4), err => {
+            message.reply("Ton mot **" + args[1].toUpperCase() + "** a bien été ajouté à la liste de proposition!")
+            addLog("Mot ajouté par " + message.author.username + " : " + args[1].toUpperCase())
+          });
+        } else {
+          message.reply("Le mot est déjà dans la base ou alors a déjà été proposé!")
+        }
+      } else {
+        message.reply("Votre mot doit être plus long que 3 caractères!")
+      }
+    }
+
+    if (isCommand("help", message)) {
+      message.delete()
+      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start (difficultee) (mot)` : Démare une partie avec le mot (mot) ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message\n:black_small_square: `" + config.prefix + "ping` : Affiche le ping courant du bot\n:black_small_square: `" + config.prefix + "word [mot]` : Propose un mot")
+    }
+
+    if (isCommand("ping", message)) {
+      message.delete()
+      message.reply("Mon ping est de **" + client.ping + "ms** 🏓");
+    }
+
+    if(message.channel.type === "dm") return;
+    if(message.channel.id!=config.channel) return;
 
     if (isCommand("start", message)) {
       if (inGame === false) {
@@ -418,46 +470,6 @@ client.on("message", message => {
       }
     }
 
-    if (isCommand("help", message)) {
-      message.delete()
-      message.author.send("Bienvenue dans l'aide du Pendu Bot version **" + version + "**.\n\n__**Commandes :**__\n:black_small_square: `" + config.prefix + "start (difficultee) (mot)` : Démare une partie avec le mot (mot) ou un mot aléatoire si non spécifié\n:black_small_square: `" + config.prefix + "try [lettre/mot]` : Essaye de trouver la lettre [lettre] ou le mot [mot]\n:black_small_square: `" + config.prefix + "help` : Affiche ce message\n:black_small_square: `" + config.prefix + "ping` : Affiche le ping courant du bot\n:black_small_square: `" + config.prefix + "word [mot]` : Propose un mot")
-    }
-
-    if (isCommand("ping", message)) {
-      message.delete()
-      message.reply("Mon ping est de **" + client.ping + "ms** 🏓");
-    }
-
-    if (isCommand("word", message)) {
-      message.delete()
-      if (args[1].length>=3) {
-        var inside = false;
-        for (var i = 0; i < mots.liste_mot.length; i++) {
-          if (mots.liste_mot[i]==args[1].toUpperCase()) {
-            inside = true;
-          }
-        }
-
-        for (var i = 0; i < motsEnAttente.liste_mot.length; i++) {
-          if (motsEnAttente.liste_mot[i].mot==args[1].toUpperCase()) {
-            inside = true;
-          }
-        }
-
-        if (inside == false) {
-          motsEnAttente.liste_mot[motsEnAttente.liste_mot.length] = {"mot": args[1].toUpperCase(), "user": message.author.username}
-          fs.writeFile("motsEnAttente.json", JSON.stringify (motsEnAttente, null, 4), err => {
-            message.reply("Ton mot **" + args[1].toUpperCase() + "** a bien été ajouté à la liste de proposition!")
-            addLog("Mot ajouté par " + message.author.username + " : " + args[1].toUpperCase())
-          });
-        } else {
-          message.reply("Le mot est déjà dans la base ou alors a déjà été proposé!")
-        }
-      } else {
-        message.reply("Votre mot doit être plus long que 3 caractères!")
-      }
-    }
-
     if (isCommand("valWord", message)) {
       message.delete()
       if (message.member.hasPermission('ADMINISTRATOR')) {
@@ -500,3 +512,12 @@ client.on("message", message => {
       }
     }
 });
+
+process.on('SIGTERM', () => {
+  addLog("Extinction du bot par la console", false)
+  message.reply("Extiction du bot dans 5 secondes.")
+
+  setTimeout(function(){
+    process.exit();
+  }, 5000);
+})

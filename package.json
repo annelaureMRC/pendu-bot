@@ -1,6 +1,6 @@
 {
   "name": "pendu-discord",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Un bot Discord pour jouer au pendu",
   "main": "pendu.js",
   "author": "Bigaston",
