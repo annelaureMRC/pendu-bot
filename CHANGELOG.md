@@ -2,9 +2,14 @@
 - Ajouts d'images au lieu de textes (compatibilitée mobile)
 - Mise en place d'une base de donnée MySQL
 - Modifier commande de lancement pour rediriger les erreurs dans un fichier
-- Ajout d'une commande dans `p!valWord` pour suprimer un mot
-- Modifier information donnée par `p!valWord all`
-- Arrondir le ping
+
+# 0.7.0
+*(27/10/2018) 00H00*
+- Modification de `p!valWord` en `p!mod` pour plus de cohérence
+- Modification de `p!mod all` en `p!mod show` pour plus de cohérence
+- Modification des informations données par `p!mod show`
+- Ajout de `p!mod delete [ID]` pour suprimer un mot proposé
+- Commande `p!ping` renvoit maintenant un ping arrondie à l'entier
 
 # 0.6.1
 *(25/10/2018) 20H50*
