@@ -4,7 +4,7 @@
 - Modifier commande de lancement pour rediriger les erreurs dans un fichier
 
 # 0.7.0
-*(27/10/2018) 00H00*
+*(27/10/2018) 19H30*
 - Modification de `p!valWord` en `p!mod` pour plus de cohérence
 - Modification de `p!mod all` en `p!mod show` pour plus de cohérence
 - Modification des informations données par `p!mod show`
