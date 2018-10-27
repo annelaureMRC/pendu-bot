@@ -6,7 +6,7 @@ const motsEnAttente = require("./motsEnAttente.json")
 const config = require("./config.json")
 
 var date = new Date().toLocaleTimeString();
-var version = "0.6.1";
+var version = "0.7.0";
 
 var motATrouver = "";
 var motTrouve = "";
@@ -199,7 +199,7 @@ function isCommand(pCommande, pMessage) {
     pCommande : str : la commande a tester
     pMessage : objet : le message envoyé par l'utilisateur
   */
-  return pMessage.content.startsWith(config.prefix+ pCommande)
+  return pMessage.content.startsWith(config.prefix + pCommande)
 }
 
 function testLettre(pListe, pLettre) {
@@ -291,7 +291,7 @@ client.on("message", message => {
 
     if (isCommand("ping", message)) {
       message.delete()
-      message.reply("Mon ping est de **" + client.ping + "ms** 🏓");
+      message.reply("Mon ping est de **" + Math.round(client.ping) + "ms** 🏓");
     }
 
     if(message.channel.type === "dm") return;
@@ -470,11 +470,11 @@ client.on("message", message => {
       }
     }
 
-    if (isCommand("valWord", message)) {
+    if (isCommand("mod", message)) {
       message.delete()
       if (message.member.hasPermission('ADMINISTRATOR')) {
-        if (args[1] === "all") {
-          message.author.send("Il y a **" + motsEnAttente.liste_mot.length + "** mots en attente. Utilisez `" + config.prefix + "show [id]` pour en voir un!")
+        if (args[1] === "show") {
+          message.author.send("Il y a **" + motsEnAttente.liste_mot.length + "** mots en attente. Utilisez `" + config.prefix + "mod modify [id]` pour modifier un mot, `" + config.prefix + "mod delete [id]` pour en suprimer un ou alors `" + config.prefix + "mod valide [id]` pour en valider un")
           var chaineAff = "";
           for (var i = 0; i < motsEnAttente.liste_mot.length; i++) {
             chaineAff = chaineAff + "[" + i + "] **" + motsEnAttente.liste_mot[i].mot + "** proposé par *" + motsEnAttente.liste_mot[i].user + "*\n"
@@ -493,7 +493,7 @@ client.on("message", message => {
               message.reply("Mot [" + args[2] + "] modifié en **" + args[3].toUpperCase() + "**")
             });
           } else {
-            message.reply("Merci de spécifier un ID et un mot valide! `" + config.prefix + "valWord modify [ID] [mot]`!")
+            message.reply("Merci de spécifier un ID et un mot valide! `" + config.prefix + "mod modify [ID] [mot]`!")
           }
         } else if (args[1] === "valide") {
           if (args[2]>=0 && args[2]<motsEnAttente.liste_mot.length) {
@@ -506,7 +506,19 @@ client.on("message", message => {
               });
             });
           } else {
-            message.reply("Merci de spécifier un ID valide! `" + config.prefix + "valWord valide [ID]`!")
+            message.reply("Merci de spécifier un ID valide! `" + config.prefix + "mod valide [ID]`!")
+          }
+        } else if (args[1] === "delete") {
+          if (args[2]>=0 && args[2]<motsEnAttente.liste_mot.length) {
+              motsEnAttente.liste_mot = removeParam(motsEnAttente.liste_mot, args[2])
+
+            fs.writeFile("mots.json", JSON.stringify (mots, null, 4), err => {
+              fs.writeFile("motsEnAttente.json", JSON.stringify (motsEnAttente, null, 4), err => {
+                message.reply("Mot **[" + args[2] + "]** suprimé!")
+              });
+            });
+          } else {
+            message.reply("Merci de spécifier un ID valide! `" + config.prefix + "mod delete [ID]`!")
           }
         }
       }
@@ -514,6 +526,7 @@ client.on("message", message => {
 });
 
 process.on('SIGTERM', () => {
+  // Fonction executée quand on envoit un signal pour arreter le programme
   addLog("Extinction du bot par la console", false)
   console.log("Extiction du bot dans 5 secondes.")
 
