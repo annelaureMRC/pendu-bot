@@ -299,7 +299,8 @@ client.on("message", message => {
 
     if (isCommand("start", message)) {
       if (inGame === false) {
-        message.delete()
+		message.delete()
+		nbEssais = 0;
         message.channel.edit({"name": "❌pendu", "topic" : "Partie en cours. Lancée par " + message.author.username})
         if (args[2] != null) {
           motATrouver = args[2].toUpperCase();
